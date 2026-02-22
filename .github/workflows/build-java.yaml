@@ -26,15 +26,15 @@ jobs:
     - name: Clean project
       run: ./gradlew clean --no-daemon
 
-    - name: Build release APK
-      run: ./gradlew assembleRelease --no-daemon
+    - name: Build APKs
+      run: ./gradlew assemble --no-daemon
 
     - name: Upload release APK
       if: success()
       uses: actions/upload-artifact@v4
       with:
         name: app-release
-        path: app/build/outputs/apk/release/app-release-unsigned.apk
+        path: app/build/outputs/apk/release/app-release.apk
         retention-days: 30
 
     - name: Upload debug APK
