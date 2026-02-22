@@ -334,10 +334,17 @@ public class CameraActivity extends AppCompatActivity {
         }
         
         // 添加经纬度
-        if (cameraConfig.isEnableCoordinates() && signalData.getLatitude() != 0 && signalData.getLongitude() != 0) {
-            String coordinates = String.format(Locale.CHINA, "经纬度: %.6f, %.6f", 
-                signalData.getLatitude(), signalData.getLongitude());
-            watermarkTexts.add(coordinates);
+        if (cameraConfig.isEnableCoordinates()) {
+            double latitude = signalData.getLatitude();
+            double longitude = signalData.getLongitude();
+            if (latitude != 0 || longitude != 0) {
+                String coordinates = String.format(Locale.CHINA, "经纬度: %.6f, %.6f", 
+                    latitude, longitude);
+                watermarkTexts.add(coordinates);
+            } else {
+                // 如果没有获取到经纬度，显示提示信息
+                watermarkTexts.add("经纬度: 未获取到位置信息");
+            }
         }
         
         // 添加信号信息

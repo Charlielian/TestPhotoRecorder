@@ -145,31 +145,36 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void initViews() {
-        // 顶部栏控件
-        tvNetworkType = findViewById(R.id.network_type);
-        tvSignalStrength = findViewById(R.id.signal_strength);
-        networkSwitch = findViewById(R.id.network_switch);
-        simCardSpinner = findViewById(R.id.sim_card_spinner);
-        
-        // 信号信息控件
-        tvOperator = findViewById(R.id.tv_operator);
-        tvCgi = findViewById(R.id.tv_cgi);
-        tvFrequency = findViewById(R.id.tv_frequency);
-        tvBand = findViewById(R.id.tv_band);
-        tvPci = findViewById(R.id.tv_pci);
-        tvRssi = findViewById(R.id.tv_rssi);
-        tvSinr = findViewById(R.id.tv_sinr);
-        tvLocation = findViewById(R.id.tv_location);
-        tvTimestamp = findViewById(R.id.tv_timestamp);
-        
-        // 功能按钮
-        btnCamera = findViewById(R.id.btn_camera);
-        btnHistory = findViewById(R.id.btn_history);
-        btnChart = findViewById(R.id.btn_chart);
-        btnBatchTest = findViewById(R.id.btn_batch_test);
-        
-        // 设置点击监听器
-        setupClickListeners();
+        try {
+            // 顶部栏控件
+            tvNetworkType = findViewById(R.id.network_type);
+            tvSignalStrength = findViewById(R.id.signal_strength);
+            networkSwitch = findViewById(R.id.network_switch);
+            simCardSpinner = findViewById(R.id.sim_card_spinner);
+            
+            // 信号信息控件
+            tvOperator = findViewById(R.id.tv_operator);
+            tvCgi = findViewById(R.id.tv_cgi);
+            tvFrequency = findViewById(R.id.tv_frequency);
+            tvBand = findViewById(R.id.tv_band);
+            tvPci = findViewById(R.id.tv_pci);
+            tvRssi = findViewById(R.id.tv_rssi);
+            tvSinr = findViewById(R.id.tv_sinr);
+            tvLocation = findViewById(R.id.tv_location);
+            tvTimestamp = findViewById(R.id.tv_timestamp);
+            
+            // 功能按钮
+            btnCamera = findViewById(R.id.btn_camera);
+            btnHistory = findViewById(R.id.btn_history);
+            btnChart = findViewById(R.id.btn_chart);
+            btnBatchTest = findViewById(R.id.btn_batch_test);
+            
+            // 设置点击监听器
+            setupClickListeners();
+        } catch (Exception e) {
+            Log.e(TAG, "初始化UI控件失败", e);
+            // 继续执行，避免应用闪退
+        }
     }
     
     private void setupToolbar() {
@@ -361,7 +366,9 @@ public class MainActivity extends AppCompatActivity {
                     currentLocation = location;
                     updateDisplayData();
                     showProgress(false);
-                    swipeRefreshLayout.setRefreshing(false);
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     isRefreshing.set(false);
                     
                     // 根据信号强度改变颜色
@@ -372,7 +379,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "刷新数据失败", e);
                 mainHandler.post(() -> {
                     showProgress(false);
-                    swipeRefreshLayout.setRefreshing(false);
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     isRefreshing.set(false);
                     showError("获取信号数据失败");
                 });
@@ -418,25 +427,43 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void display4GParameters() {
-        tvCgi.setText(currentSignalData.getCgi() != null ? 
-            currentSignalData.getCgi() : "N/A");
-        tvFrequency.setText(String.valueOf(currentSignalData.getFrequency()));
-        tvBand.setText(currentSignalData.getBand() != null ? 
-            currentSignalData.getBand() : "N/A");
-        tvPci.setText(String.valueOf(currentSignalData.getPci()));
+        if (tvCgi != null) {
+            tvCgi.setText(currentSignalData.getCgi() != null ? 
+                currentSignalData.getCgi() : "N/A");
+        }
+        if (tvFrequency != null) {
+            tvFrequency.setText(String.valueOf(currentSignalData.getFrequency()));
+        }
+        if (tvBand != null) {
+            tvBand.setText(currentSignalData.getBand() != null ? 
+                currentSignalData.getBand() : "N/A");
+        }
+        if (tvPci != null) {
+            tvPci.setText(String.valueOf(currentSignalData.getPci()));
+        }
         
         // 信号强度
         int rssi = currentSignalData.getRssi();
-        tvRssi.setText(rssi != 0 ? rssi + " dBm" : "N/A");
-        tvSignalStrength.setText(rssi != 0 ? rssi + " dBm" : "N/A");
+        if (tvRssi != null) {
+            tvRssi.setText(rssi != 0 ? rssi + " dBm" : "N/A");
+        }
+        if (tvSignalStrength != null) {
+            tvSignalStrength.setText(rssi != 0 ? rssi + " dBm" : "N/A");
+        }
         
         // 5G相关参数（如果存在）
-        tvRsrp.setText(currentSignalData.getRsrp() != 0 ? 
-            currentSignalData.getRsrp() + " dBm" : "N/A");
-        tvRsrq.setText(currentSignalData.getRsrq() != 0 ? 
-            currentSignalData.getRsrq() + " dB" : "N/A");
-        tvSinr.setText(currentSignalData.getSinr() != 0 ? 
-            currentSignalData.getSinr() + " dB" : "N/A");
+        if (tvRsrp != null) {
+            tvRsrp.setText(currentSignalData.getRsrp() != 0 ? 
+                currentSignalData.getRsrp() + " dBm" : "N/A");
+        }
+        if (tvRsrq != null) {
+            tvRsrq.setText(currentSignalData.getRsrq() != 0 ? 
+                currentSignalData.getRsrq() + " dB" : "N/A");
+        }
+        if (tvSinr != null) {
+            tvSinr.setText(currentSignalData.getSinr() != 0 ? 
+                currentSignalData.getSinr() + " dB" : "N/A");
+        }
     }
     
     private void display5GParameters() {
@@ -444,10 +471,12 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void updateLocationDisplay() {
-        if (currentLocation != null) {
-            tvLocation.setText(locationService.getLocationDescription());
-        } else {
-            tvLocation.setText("正在获取位置...");
+        if (tvLocation != null) {
+            if (currentLocation != null) {
+                tvLocation.setText(locationService.getLocationDescription());
+            } else {
+                tvLocation.setText("正在获取位置...");
+            }
         }
     }
     
@@ -469,7 +498,9 @@ public class MainActivity extends AppCompatActivity {
             color = Color.GRAY;
         }
         
-        tvSignalStrength.setTextColor(color);
+        if (tvSignalStrength != null) {
+            tvSignalStrength.setTextColor(color);
+        }
     }
     
     // 更新信号质量和稳定性显示
@@ -622,17 +653,33 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void showEmptyData() {
-        tvNetworkType.setText("无信号");
-        tvOperator.setText("未知");
-        tvCgi.setText("N/A");
-        tvFrequency.setText("0");
-        tvBand.setText("N/A");
-        tvPci.setText("0");
-        tvRssi.setText("N/A");
-        tvSinr.setText("N/A");
-        tvRsrp.setText("N/A");
-        tvRsrq.setText("N/A");
-        tvTa.setText("0");
+        if (tvNetworkType != null) {
+            tvNetworkType.setText("无信号");
+        }
+        if (tvOperator != null) {
+            tvOperator.setText("未知");
+        }
+        if (tvCgi != null) {
+            tvCgi.setText("N/A");
+        }
+        if (tvFrequency != null) {
+            tvFrequency.setText("0");
+        }
+        if (tvBand != null) {
+            tvBand.setText("N/A");
+        }
+        if (tvPci != null) {
+            tvPci.setText("0");
+        }
+        if (tvRssi != null) {
+            tvRssi.setText("N/A");
+        }
+        if (tvSinr != null) {
+            tvSinr.setText("N/A");
+        }
+        if (tvTa != null) {
+            tvTa.setText("0");
+        }
     }
     
     private void saveCurrentData() {
@@ -661,10 +708,14 @@ public class MainActivity extends AppCompatActivity {
                 mainHandler.post(() -> {
                     showProgress(false);
                     if (success) {
-                        Snackbar.make(scrollView, "数据保存成功", Snackbar.LENGTH_SHORT)
-                            .setAction("查看", v -> 
-                                startActivity(new Intent(MainActivity.this, HistoryActivity.class)))
-                            .show();
+                        if (scrollView != null) {
+                            Snackbar.make(scrollView, "数据保存成功", Snackbar.LENGTH_SHORT)
+                                .setAction("查看", v -> 
+                                    startActivity(new Intent(MainActivity.this, HistoryActivity.class)))
+                                .show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "数据保存成功", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(MainActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
                     }
@@ -699,8 +750,12 @@ public class MainActivity extends AppCompatActivity {
             mainHandler.post(() -> {
                 showProgress(false);
                 if (success) {
-                    Snackbar.make(scrollView, "导出成功", Snackbar.LENGTH_SHORT)
-                        .show();
+                    if (scrollView != null) {
+                        Snackbar.make(scrollView, "导出成功", Snackbar.LENGTH_SHORT)
+                            .show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "导出成功", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(MainActivity.this, "导出失败", Toast.LENGTH_SHORT).show();
                 }
@@ -793,13 +848,19 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void showProgress(boolean show) {
-        progressIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (progressIndicator != null) {
+            progressIndicator.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
     
     private void showError(String message) {
-        Snackbar.make(scrollView, message, Snackbar.LENGTH_LONG)
-            .setAction("重试", v -> refreshData())
-            .show();
+        if (scrollView != null) {
+            Snackbar.make(scrollView, message, Snackbar.LENGTH_LONG)
+                .setAction("重试", v -> refreshData())
+                .show();
+        } else {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
     }
     
     @Override
