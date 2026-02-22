@@ -33,6 +33,7 @@ import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.media.MediaScannerConnection;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.signal.test.services.SignalCollector;
@@ -431,6 +432,12 @@ public class CameraActivity extends AppCompatActivity {
                 out.flush();
             }
             
+            // 通知系统相册更新，使照片显示在相册中
+            MediaScannerConnection.scanFile(this, 
+                    new String[]{outputFile.getAbsolutePath()}, 
+                    new String[]{"image/jpeg"}, 
+                    null);
+            
             return outputFile.getAbsolutePath();
             
         } catch (IOException e) {
@@ -566,12 +573,22 @@ public class CameraActivity extends AppCompatActivity {
     }
     
     private void openGallery() {
-        // 如果项目中有GalleryActivity则使用，否则可以打开系统相册
-        try {
-            Intent intent = new Intent(this, Class.forName("com.signal.test.activities.GalleryActivity"));
-            startActivity(intent);
-        } catch (ClassNotFoundException e) {
-            // 打开系统相册
+        // 打开系统相册，指定查看应用存储的照片目录
+        File photoDir = cameraUtils.getPhotoDirectory();
+        if (photoDir.exists() && photoDir.isDirectory()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(android.net.Uri.fromFile(photoDir), "image/*");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                startActivity(intent);
+            } catch (Exception e) {
+                // 如果无法直接打开目录，尝试打开系统相册
+                Intent galleryIntent = new Intent(Intent.ACTION_VIEW);
+                galleryIntent.setType("image/*");
+                startActivity(galleryIntent);
+            }
+        } else {
+            // 如果目录不存在，打开系统相册
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setType("image/*");
             startActivity(intent);
