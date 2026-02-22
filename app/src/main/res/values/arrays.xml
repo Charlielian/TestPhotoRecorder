@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 图表参数选择选项 -->
+    <string-array name="chart_params">
+        <item>接收电平 (RSSI)</item>
+        <item>参考信号接收功率 (RSRP)</item>
+        <item>信号与干扰加噪声比 (SINR)</item>
+        <item>参考信号接收质量 (RSRQ)</item>
+    </string-array>
+</resources>

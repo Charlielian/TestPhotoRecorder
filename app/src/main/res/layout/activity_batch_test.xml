@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activities.BatchTestActivity">
+
+    <!-- 顶部标题栏 -->
+    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@color/primary"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="返回"
+            android:background="@color/transparent"
+            android:textColor="@color/white"
+            android:layout_weight="0"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="批量测试"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:fontWeight="700"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <!-- 测试配置区域 -->
+    <ScrollView
+        android:id="@+id/test_config_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_bar"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <!-- 测试次数输入 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="测试次数"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+                <EditText
+                    android:id="@+id/et_test_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="请输入测试次数"
+                    android:inputType="number"
+                    android:textSize="16sp"
+                    android:padding="8dp"
+                    android:background="@drawable/edit_text_background"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="次"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="8dp"/>
+            </LinearLayout>
+
+            <!-- 测试间隔输入 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="测试间隔"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+                <EditText
+                    android:id="@+id/et_interval"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="请输入间隔时间"
+                    android:inputType="number"
+                    android:textSize="16sp"
+                    android:padding="8dp"
+                    android:background="@drawable/edit_text_background"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="秒"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_marginLeft="8dp"/>
+            </LinearLayout>
+
+            <!-- 状态显示 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@color/light_gray"
+                android:layout_marginTop="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="测试状态"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:fontWeight="700"
+                    android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="就绪"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:id="@+id/tv_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="进度: 0/0"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+
+            <!-- 操作按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/btn_start_test"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="开始测试"
+                    android:background="@color/primary"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:padding="12dp"
+                    android:layout_margin="8dp"/>
+                <Button
+                    android:id="@+id/btn_stop_test"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="停止测试"
+                    android:background="@color/secondary"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:padding="12dp"
+                    android:layout_margin="8dp"/>
+                <Button
+                    android:id="@+id/btn_generate_report"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="生成报告"
+                    android:background="@color/secondary"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:padding="12dp"
+                    android:layout_margin="8dp"/>
+            </LinearLayout>
+
+            <!-- 提示信息 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="提示: 批量测试会自动按照设定的次数和间隔进行信号采集，并在测试完成后生成测试报告。"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                android:padding="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"/>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

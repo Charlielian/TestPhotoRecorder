@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">信号测试工具</string>
+    <string name="title_main">信号测试</string>
+    <string name="title_camera">拍照记录</string>
+    <string name="title_history">历史记录</string>
+    <string name="btn_camera">拍照记录</string>
+    <string name="btn_history">历史记录</string>
+    <string name="btn_capture">拍照</string>
+    <string name="btn_back">返回</string>
+    <string name="btn_gallery">相册</string>
+    <string name="lbl_network_type">网络类型</string>
+    <string name="lbl_signal_strength">信号强度</string>
+    <string name="lbl_operator">运营商</string>
+    <string name="lbl_cgi">小区CGI</string>
+    <string name="lbl_frequency">频点</string>
+    <string name="lbl_band">频段</string>
+    <string name="lbl_rssi">接收电平</string>
+    <string name="lbl_location">位置</string>
+    <string name="lbl_timestamp">时间</string>
+    <string name="msg_permission_required">需要权限才能正常使用</string>
+    <string name="msg_capture_success">拍照成功</string>
+    <string name="msg_capture_failed">拍照失败</string>
+    <string name="msg_data_saved">数据保存成功</string>
+    <string name="msg_data_exported">数据导出成功</string>
+</resources>

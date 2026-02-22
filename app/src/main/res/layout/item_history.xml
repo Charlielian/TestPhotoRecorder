@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="@color/light_gray"
+    android:layout_marginBottom="8dp"
+    android:elevation="2dp">
+
+    <!-- 缩略图 -->
+    <ImageView
+        android:id="@+id/iv_thumbnail"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:background="@color/gray"/>
+
+    <!-- 信息区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="16dp">
+
+        <TextView
+            android:id="@+id/tv_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2023-01-01 12:00:00"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:fontWeight="700"/>
+
+        <TextView
+            android:id="@+id/tv_operator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="运营商: 中国移动"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/tv_network_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="网络类型: 4G"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tv_rssi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="信号强度: -75 dBm"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="位置: Lat: 39.9042, Lng: 116.4074"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"/>
+    </LinearLayout>
+
+</LinearLayout>
