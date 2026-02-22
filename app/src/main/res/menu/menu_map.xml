@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_zoom_in"
+        android:title="放大"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_zoom_out"
+        android:title="缩小"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_center"
+        android:title="定位到当前位置"
+        app:showAsAction="never" />
+</menu>

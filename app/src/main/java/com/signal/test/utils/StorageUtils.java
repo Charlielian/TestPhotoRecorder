@@ -141,4 +141,20 @@ public class StorageUtils {
             dbHelper.close();
         }
     }
+    
+    // 删除所有信号数据
+    public boolean deleteAllData() {
+        int rowsAffected = database.delete(TABLE_SIGNAL, null, null);
+        return rowsAffected > 0;
+    }
+    
+    // 删除单条信号数据
+    public boolean deleteSignalData(SignalData data) {
+        if (data == null || data.getId() == 0) {
+            return false;
+        }
+        int rowsAffected = database.delete(TABLE_SIGNAL, COLUMN_ID + " = ?", 
+            new String[]{String.valueOf(data.getId())});
+        return rowsAffected > 0;
+    }
 }

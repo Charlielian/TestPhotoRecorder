@@ -22,6 +22,13 @@ public class SignalData {
     private int nrPci;                // 5G物理小区ID
     private int rsrp;                 // 参考信号接收功率
     private int rsrq;                 // 参考信号接收质量
+    private int ta;                   // 时间提前量
+    // 信号质量和稳定性评估字段
+    private String signalQuality;     // 信号质量等级
+    private String networkStability;  // 网络稳定性评估
+    private int signalQualityScore;   // 信号质量评分
+    private int stabilityScore;       // 稳定性评分
+    private boolean isAnomaly;        // 是否为异常信号
     
     // Getters and Setters
     public int getId() {
@@ -183,5 +190,54 @@ public class SignalData {
     
     public void setRsrq(int rsrq) {
         this.rsrq = rsrq;
+    }
+    
+    public int getTa() {
+        return ta;
+    }
+    
+    public void setTa(int ta) {
+        this.ta = ta;
+    }
+    
+    // 信号质量和稳定性评估字段的Getters and Setters
+    public String getSignalQuality() {
+        return signalQuality;
+    }
+    
+    public void setSignalQuality(String signalQuality) {
+        this.signalQuality = signalQuality;
+    }
+    
+    public String getNetworkStability() {
+        return networkStability;
+    }
+    
+    public void setNetworkStability(String networkStability) {
+        this.networkStability = networkStability;
+    }
+    
+    public int getSignalQualityScore() {
+        return signalQualityScore;
+    }
+    
+    public void setSignalQualityScore(int signalQualityScore) {
+        this.signalQualityScore = signalQualityScore;
+    }
+    
+    public int getStabilityScore() {
+        return stabilityScore;
+    }
+    
+    public void setStabilityScore(int stabilityScore) {
+        this.stabilityScore = stabilityScore;
+    }
+    
+    public boolean isAnomaly() {
+        return isAnomaly;
+    }
+    
+    public void setAnomaly(boolean isAnomaly) {
+        this.isAnomaly = isAnomaly;
     }
 }

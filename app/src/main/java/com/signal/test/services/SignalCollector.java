@@ -13,14 +13,19 @@ import android.os.Build;
 import com.signal.test.models.SignalData;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SignalCollector {
     private Context context;
     private TelephonyManager telephonyManager;
+    private List<SignalData> signalHistory; // 信号历史数据，用于稳定性评估
+    private static final int HISTORY_SIZE = 10; // 历史数据大小
     
     public SignalCollector(Context context) {
         this.context = context;
         this.telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        this.signalHistory = new CopyOnWriteArrayList<>();
     }
     
     // 获取信号数据
@@ -47,6 +52,15 @@ public class SignalCollector {
         
         // 获取信号强度
         data.setRssi(getSignalStrength(subId));
+        
+        // 分析信号质量
+        analyzeSignalQuality(data);
+        
+        // 评估网络稳定性
+        evaluateNetworkStability(data);
+        
+        // 更新信号历史
+        updateSignalHistory(data);
         
         return data;
     }
@@ -533,4 +547,234 @@ public class SignalCollector {
             return "Unknown";
         }
     }
+    
+    // 分析信号质量
+    private void analyzeSignalQuality(SignalData data) {
+        if (data == null) return;
+        
+        String networkType = data.getNetworkType();
+        int qualityScore = 0;
+        String qualityLevel = "未知";
+        
+        if ("5G".equals(networkType)) {
+            // 5G信号质量评估
+            int rsrp = data.getRsrp();
+            int rsrq = data.getRsrq();
+            int sinr = data.getSinr();
+            
+            // 计算综合得分
+            if (rsrp != 0) {
+                qualityScore += Math.min(50, Math.max(0, (rsrp + 120) * 2));
+            }
+            if (rsrq != 0) {
+                qualityScore += Math.min(30, Math.max(0, (rsrq + 20) * 3));
+            }
+            if (sinr != 0) {
+                qualityScore += Math.min(20, Math.max(0, sinr));
+            }
+            
+            // 评估等级
+            if (qualityScore >= 90) {
+                qualityLevel = "优秀";
+            } else if (qualityScore >= 70) {
+                qualityLevel = "良好";
+            } else if (qualityScore >= 50) {
+                qualityLevel = "一般";
+            } else if (qualityScore >= 30) {
+                qualityLevel = "较差";
+            } else {
+                qualityLevel = "差";
+            }
+        } else if ("4G".equals(networkType)) {
+            // 4G信号质量评估
+            int rsrp = data.getRsrp();
+            int rsrq = data.getRsrq();
+            int sinr = data.getSinr();
+            
+            // 计算综合得分
+            if (rsrp != 0) {
+                qualityScore += Math.min(50, Math.max(0, (rsrp + 120) * 2));
+            }
+            if (rsrq != 0) {
+                qualityScore += Math.min(30, Math.max(0, (rsrq + 20) * 3));
+            }
+            if (sinr != 0) {
+                qualityScore += Math.min(20, Math.max(0, sinr));
+            }
+            
+            // 评估等级
+            if (qualityScore >= 90) {
+                qualityLevel = "优秀";
+            } else if (qualityScore >= 70) {
+                qualityLevel = "良好";
+            } else if (qualityScore >= 50) {
+                qualityLevel = "一般";
+            } else if (qualityScore >= 30) {
+                qualityLevel = "较差";
+            } else {
+                qualityLevel = "差";
+            }
+        } else {
+            // 2G/3G信号质量评估
+            int rssi = data.getRssi();
+            
+            // 计算得分
+            if (rssi != 0) {
+                qualityScore = Math.min(100, Math.max(0, (rssi + 110) * 2));
+            }
+            
+            // 评估等级
+            if (qualityScore >= 90) {
+                qualityLevel = "优秀";
+            } else if (qualityScore >= 70) {
+                qualityLevel = "良好";
+            } else if (qualityScore >= 50) {
+                qualityLevel = "一般";
+            } else if (qualityScore >= 30) {
+                qualityLevel = "较差";
+            } else {
+                qualityLevel = "差";
+            }
+        }
+        
+        data.setSignalQuality(qualityLevel);
+        data.setSignalQualityScore(qualityScore);
+        
+        // 检测异常信号
+        detectSignalAnomaly(data);
+    }
+    
+    // 检测信号异常
+    private void detectSignalAnomaly(SignalData data) {
+        if (data == null) return;
+        
+        boolean isAnomaly = false;
+        String networkType = data.getNetworkType();
+        
+        if ("5G".equals(networkType)) {
+            // 5G信号异常检测
+            int rsrp = data.getRsrp();
+            int rsrq = data.getRsrq();
+            
+            if (rsrp != 0 && rsrp < -120) {
+                isAnomaly = true;
+            }
+            if (rsrq != 0 && rsrq < -15) {
+                isAnomaly = true;
+            }
+        } else if ("4G".equals(networkType)) {
+            // 4G信号异常检测
+            int rsrp = data.getRsrp();
+            int rsrq = data.getRsrq();
+            
+            if (rsrp != 0 && rsrp < -120) {
+                isAnomaly = true;
+            }
+            if (rsrq != 0 && rsrq < -15) {
+                isAnomaly = true;
+            }
+        } else {
+            // 2G/3G信号异常检测
+            int rssi = data.getRssi();
+            
+            if (rssi != 0 && rssi < -100) {
+                isAnomaly = true;
+            }
+        }
+        
+        data.setAnomaly(isAnomaly);
+    }
+    
+    // 评估网络稳定性
+    private void evaluateNetworkStability(SignalData data) {
+        if (data == null) return;
+        
+        int stabilityScore = 100;
+        String stabilityLevel = "稳定";
+        
+        // 如果历史数据不足，无法评估稳定性
+        if (signalHistory.size() < 3) {
+            data.setNetworkStability("数据不足");
+            data.setStabilityScore(0);
+            return;
+        }
+        
+        // 计算信号强度波动
+        int currentStrength = 0;
+        String networkType = data.getNetworkType();
+        
+        if ("5G".equals(networkType) || "4G".equals(networkType)) {
+            currentStrength = data.getRsrp() != 0 ? data.getRsrp() : data.getRssi();
+        } else {
+            currentStrength = data.getRssi();
+        }
+        
+        // 计算与历史数据的差异
+        int totalDiff = 0;
+        int validCount = 0;
+        
+        for (SignalData historyData : signalHistory) {
+            if (historyData == null) continue;
+            
+            int historyStrength = 0;
+            if ("5G".equals(historyData.getNetworkType()) || "4G".equals(historyData.getNetworkType())) {
+                historyStrength = historyData.getRsrp() != 0 ? historyData.getRsrp() : historyData.getRssi();
+            } else {
+                historyStrength = historyData.getRssi();
+            }
+            
+            if (historyStrength != 0 && currentStrength != 0) {
+                totalDiff += Math.abs(currentStrength - historyStrength);
+                validCount++;
+            }
+        }
+        
+        if (validCount > 0) {
+            int avgDiff = totalDiff / validCount;
+            
+            // 根据平均差异评估稳定性
+            if (avgDiff <= 3) {
+                stabilityLevel = "稳定";
+                stabilityScore = 100;
+            } else if (avgDiff <= 6) {
+                stabilityLevel = "基本稳定";
+                stabilityScore = 80;
+            } else if (avgDiff <= 10) {
+                stabilityLevel = "轻度波动";
+                stabilityScore = 60;
+            } else if (avgDiff <= 15) {
+                stabilityLevel = "中度波动";
+                stabilityScore = 40;
+            } else {
+                stabilityLevel = "严重波动";
+                stabilityScore = 20;
+            }
+        }
+        
+        data.setNetworkStability(stabilityLevel);
+        data.setStabilityScore(stabilityScore);
+    }
+    
+    // 更新信号历史
+    private void updateSignalHistory(SignalData data) {
+        if (data == null) return;
+        
+        // 添加新数据到历史记录
+        signalHistory.add(0, data);
+        
+        // 保持历史记录大小
+        if (signalHistory.size() > HISTORY_SIZE) {
+            signalHistory.remove(signalHistory.size() - 1);
+        }
+    }
+    
+    // 刷新信号数据
+    public void refreshSignalData() {
+        // 清空历史数据，确保下次获取的是最新数据
+        signalHistory.clear();
+        
+        // 提前获取一次信号数据，以确保数据是最新的
+        getSignalData();
+    }
+
 }

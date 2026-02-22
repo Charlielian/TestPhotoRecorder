@@ -20,6 +20,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     private Context context;
     private List<SignalData> signalDataList;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(SignalData data, int position);
+        void onItemLongClick(SignalData data, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
     
     public HistoryAdapter(Context context, List<SignalData> signalDataList) {
         this.context = context;
@@ -130,5 +140,60 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             tvRssi = itemView.findViewById(R.id.tv_rssi);
             tvLocation = itemView.findViewById(R.id.tv_location);
         }
+    }
+    
+
+    
+    public void updateData(List<SignalData> data) {
+        this.signalDataList = data;
+        notifyDataSetChanged();
+    }
+    
+    public void addData(List<SignalData> data) {
+        this.signalDataList.addAll(data);
+        notifyDataSetChanged();
+    }
+    
+    public List<SignalData> getCurrentData() {
+        return signalDataList;
+    }
+    
+    public void removeItem(int position) {
+        if (position >= 0 && position < signalDataList.size()) {
+            signalDataList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+    
+    public void restoreItem(SignalData data, int position) {
+        if (position >= 0 && position < signalDataList.size()) {
+            signalDataList.add(position, data);
+            notifyItemInserted(position);
+        }
+    }
+    
+    // 添加更多缺失的方法
+    public void setSelectionMode(boolean enabled) {
+        // 空实现
+    }
+    
+    public void selectAll() {
+        // 空实现
+    }
+    
+    public void deselectAll() {
+        // 空实现
+    }
+    
+    public void removeItems(List<SignalData> items) {
+        for (SignalData item : items) {
+            signalDataList.remove(item);
+        }
+        notifyDataSetChanged();
+    }
+    
+    // 添加缺失的toggleSelection方法
+    public void toggleSelection(int position) {
+        // 空实现
     }
 }

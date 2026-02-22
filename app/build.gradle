@@ -68,6 +68,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.1.0'
     // Maps SDK for Android
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
+    // Maps Utils for clustering and heatmaps
+    implementation 'com.google.maps.android:android-maps-utils:2.3.0'
+    // SwipeRefreshLayout
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
 
 
