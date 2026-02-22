@@ -97,7 +97,7 @@ public class LocationService {
     public String getLocationDescription() {
         Location location = getCurrentLocation();
         if (location != null) {
-            return "Lat: " + location.getLatitude() + ", Lng: " + location.getLongitude();
+            return "Lat: " + String.format("%.6f", location.getLatitude()) + ", Lng: " + String.format("%.6f", location.getLongitude());
         }
         return "未知位置";
     }

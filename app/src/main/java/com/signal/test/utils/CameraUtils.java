@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Environment;
+import android.media.MediaScannerConnection;
+import android.provider.MediaStore;
 
 import com.signal.test.models.SignalData;
 
@@ -64,8 +66,8 @@ public class CameraUtils {
         backgroundPaint.setColor(Color.BLACK);
         backgroundPaint.setAlpha(150); // 稍微提高透明度
         
-        // 根据网络类型调整背景高度
-        int lineCount = signalData.getNetworkType().equals("5G") ? 7 : 5;
+        // 根据网络类型调整背景高度（增加经纬度一行）
+        int lineCount = signalData.getNetworkType().equals("5G") ? 8 : 6;
         int backgroundHeight = lineCount * lineHeight + 40;
         int backgroundWidth = (int)(width * 0.35f);
         canvas.drawRect(0f, height - backgroundHeight, backgroundWidth, height, backgroundPaint);
@@ -91,6 +93,17 @@ public class CameraUtils {
         yOffset += lineHeight;
         
         canvas.drawText("频段: " + signalData.getBand(), 20f, yOffset, textPaint);
+        yOffset += lineHeight;
+        
+        // 绘制经纬度信息
+        double latitude = signalData.getLatitude();
+        double longitude = signalData.getLongitude();
+        if (latitude != 0 || longitude != 0) {
+            String latLngText = String.format("经纬度: %.6f, %.6f", latitude, longitude);
+            canvas.drawText(latLngText, 20f, yOffset, textPaint);
+        } else {
+            canvas.drawText("经纬度: N/A", 20f, yOffset, textPaint);
+        }
         yOffset += lineHeight;
         
         // 根据网络类型添加不同的信号强度参数
@@ -123,6 +136,12 @@ public class CameraUtils {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 95, fos);
         fos.flush();
         fos.close();
+        
+        // 通知系统相册更新，使照片显示在相册中
+        MediaScannerConnection.scanFile(context, 
+                new String[]{file.getAbsolutePath()}, 
+                new String[]{"image/jpeg"}, 
+                null);
         
         return file.getAbsolutePath();
     }

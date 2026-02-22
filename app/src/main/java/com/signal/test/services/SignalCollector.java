@@ -139,8 +139,11 @@ public class SignalCollector {
                         CellSignalStrengthNr signalStrength = (CellSignalStrengthNr) cellInfoNr.getCellSignalStrength();
                         
                         // 获取5G CGI
-                        String nrCgi = "NR:" + identity.getMccString() + "-" + identity.getMncString() + "-" + 
-                                     identity.getTac() + "-" + identity.getNci();
+                        long nci = identity.getNci();
+                        long genb = nci / 4096;
+                        long lcrid = nci % 4096;
+                        String nrCgi = identity.getMccString() + "-" + identity.getMncString() + "-" + 
+                                     genb + "-" + lcrid;
                         data.setNrCgi(nrCgi);
                         
                         // 获取5G频点
@@ -171,8 +174,11 @@ public class SignalCollector {
                         CellIdentityLte identity = cellInfoLte.getCellIdentity();
                         
                         // 获取CGI
-                        String cgi = "LTE:" + identity.getMcc() + "-" + identity.getMnc() + "-" + 
-                                    identity.getTac() + "-" + identity.getCi();
+                        int ci = identity.getCi();
+                        int enb = ci / 256;
+                        int lcrid = ci % 256;
+                        String cgi = identity.getMcc() + "-" + identity.getMnc() + "-" + 
+                                    enb + "-" + lcrid;
                         data.setCgi(cgi);
                         
                         // 获取频点
@@ -252,6 +258,125 @@ public class SignalCollector {
     // 获取信号强度
     private int getSignalStrength() {
         return getSignalStrength(-1);
+    }
+    
+    // 根据LTE EARFCN频点计算实际频率
+    private double calculateLTEFrequency(int earfcn) {
+        // LTE频段映射表（基于3GPP标准）
+        if (earfcn >= 0 && earfcn <= 599) {
+            // Band 1
+            return 1920 + 0.1 * (earfcn - 0);
+        } else if (earfcn >= 600 && earfcn <= 1199) {
+            // Band 2
+            return 1850 + 0.1 * (earfcn - 600);
+        } else if (earfcn >= 1200 && earfcn <= 1949) {
+            // Band 3
+            return 1710 + 0.1 * (earfcn - 1200);
+        } else if (earfcn >= 1950 && earfcn <= 2399) {
+            // Band 4
+            return 1710 + 0.1 * (earfcn - 1950);
+        } else if (earfcn >= 2400 && earfcn <= 2649) {
+            // Band 5
+            return 824 + 0.1 * (earfcn - 2400);
+        } else if (earfcn >= 2650 && earfcn <= 2749) {
+            // Band 6
+            return 830 + 0.1 * (earfcn - 2650);
+        } else if (earfcn >= 2750 && earfcn <= 3449) {
+            // Band 7
+            return 2500 + 0.1 * (earfcn - 2750);
+        } else if (earfcn >= 3450 && earfcn <= 3799) {
+            // Band 8
+            return 880 + 0.1 * (earfcn - 3450);
+        } else if (earfcn >= 3800 && earfcn <= 4149) {
+            // Band 9
+            return 1749.9 + 0.1 * (earfcn - 3800);
+        } else if (earfcn >= 4150 && earfcn <= 4749) {
+            // Band 10
+            return 2110 + 0.1 * (earfcn - 4150);
+        } else if (earfcn >= 4750 && earfcn <= 4949) {
+            // Band 11
+            return 1427.9 + 0.1 * (earfcn - 4750);
+        } else if (earfcn >= 5010 && earfcn <= 5179) {
+            // Band 12
+            return 728 + 0.1 * (earfcn - 5010);
+        } else if (earfcn >= 5180 && earfcn <= 5279) {
+            // Band 13
+            return 746 + 0.1 * (earfcn - 5180);
+        } else if (earfcn >= 5280 && earfcn <= 5379) {
+            // Band 14
+            return 758 + 0.1 * (earfcn - 5280);
+        } else if (earfcn >= 5735 && earfcn <= 5849) {
+            // Band 17
+            return 734 + 0.1 * (earfcn - 5735);
+        } else if (earfcn >= 5850 && earfcn <= 5999) {
+            // Band 18
+            return 815 + 0.1 * (earfcn - 5850);
+        } else if (earfcn >= 6000 && earfcn <= 6149) {
+            // Band 19
+            return 830 + 0.1 * (earfcn - 6000);
+        } else if (earfcn >= 6150 && earfcn <= 6449) {
+            // Band 20
+            return 832 + 0.1 * (earfcn - 6150);
+        } else if (earfcn >= 6450 && earfcn <= 6599) {
+            // Band 21
+            return 1447.9 + 0.1 * (earfcn - 6450);
+        } else if (earfcn >= 6600 && earfcn <= 7399) {
+            // Band 22
+            return 3410 + 0.1 * (earfcn - 6600);
+        } else if (earfcn >= 7500 && earfcn <= 7699) {
+            // Band 23
+            return 2180 + 0.1 * (earfcn - 7500);
+        } else if (earfcn >= 7700 && earfcn <= 7899) {
+            // Band 24
+            return 1525 + 0.1 * (earfcn - 7700);
+        } else if (earfcn >= 8040 && earfcn <= 8689) {
+            // Band 25
+            return 1930 + 0.1 * (earfcn - 8040);
+        } else if (earfcn >= 8690 && earfcn <= 9039) {
+            // Band 26
+            return 814 + 0.1 * (earfcn - 8690);
+        } else if (earfcn >= 9040 && earfcn <= 9209) {
+            // Band 27
+            return 807 + 0.1 * (earfcn - 9040);
+        } else if (earfcn >= 9210 && earfcn <= 9659) {
+            // Band 28
+            return 703 + 0.1 * (earfcn - 9210);
+        } else if (earfcn >= 36000 && earfcn <= 36199) {
+            // Band 33
+            return 1900 + 0.1 * (earfcn - 36000);
+        } else if (earfcn >= 36200 && earfcn <= 36349) {
+            // Band 34
+            return 2010 + 0.1 * (earfcn - 36200);
+        } else if (earfcn >= 36350 && earfcn <= 36949) {
+            // Band 35
+            return 1850 + 0.1 * (earfcn - 36350);
+        } else if (earfcn >= 36950 && earfcn <= 37549) {
+            // Band 36
+            return 1930 + 0.1 * (earfcn - 36950);
+        } else if (earfcn >= 37550 && earfcn <= 38299) {
+            // Band 37
+            return 1910 + 0.1 * (earfcn - 37550);
+        } else if (earfcn >= 38300 && earfcn <= 38699) {
+            // Band 38
+            return 2570 + 0.1 * (earfcn - 38300);
+        } else if (earfcn >= 38700 && earfcn <= 39699) {
+            // Band 39
+            return 1880 + 0.1 * (earfcn - 38700);
+        } else if (earfcn >= 39700 && earfcn <= 41599) {
+            // Band 40
+            return 2300 + 0.1 * (earfcn - 39700);
+        } else if (earfcn >= 41600 && earfcn <= 43599) {
+            // Band 41
+            return 2496 + 0.1 * (earfcn - 41600);
+        } else if (earfcn >= 50000 && earfcn <= 51499) {
+            // Band 42
+            return 3400 + 0.1 * (earfcn - 50000);
+        } else if (earfcn >= 51500 && earfcn <= 52500) {
+            // Band 43
+            return 3600 + 0.1 * (earfcn - 51500);
+        } else {
+            return 0;
+        }
     }
     
     // 根据频点获取频段
@@ -336,52 +461,73 @@ public class SignalCollector {
         }
     }
     
+    // 根据5G ARFCN频点计算实际频率
+    private double calculate5GFrequency(int nrarfcn) {
+        double frequency;
+        if (nrarfcn >= 0 && nrarfcn <= 599999) {
+            // 0 – 3000 MHz, ΔFGlobal = 5 kHz
+            frequency = 0 + 5 * (nrarfcn - 0) / 1000.0;
+        } else if (nrarfcn >= 600000 && nrarfcn <= 2016666) {
+            // 3000 – 24250 MHz, ΔFGlobal = 15 kHz
+            frequency = 3000 + 15 * (nrarfcn - 600000) / 1000.0;
+        } else if (nrarfcn >= 2016667 && nrarfcn <= 3279165) {
+            // 24250 – 100000 MHz, ΔFGlobal = 60 kHz
+            frequency = 24250.08 + 60 * (nrarfcn - 2016667) / 1000.0;
+        } else {
+            frequency = 0;
+        }
+        return frequency;
+    }
+    
     // 根据5G ARFCN频点获取频段
     private String get5GBandFromArfcn(int nrarfcn) {
-        // 5G频段映射表（基于3GPP标准）
-        if (nrarfcn >= 10000 && nrarfcn <= 20000) {
+        // 计算实际频率
+        double frequency = calculate5GFrequency(nrarfcn);
+        
+        // 根据实际频率映射频段（基于3GPP标准）
+        if (frequency >= 2110 && frequency <= 2170) {
             return "n1";
-        } else if (nrarfcn >= 20000 && nrarfcn <= 30000) {
+        } else if (frequency >= 1930 && frequency <= 1990) {
             return "n2";
-        } else if (nrarfcn >= 30000 && nrarfcn <= 40000) {
+        } else if (frequency >= 1710 && frequency <= 1785) {
             return "n3";
-        } else if (nrarfcn >= 40000 && nrarfcn <= 50000) {
+        } else if (frequency >= 824 && frequency <= 849) {
             return "n5";
-        } else if (nrarfcn >= 50000 && nrarfcn <= 60000) {
+        } else if (frequency >= 2500 && frequency <= 2570) {
             return "n7";
-        } else if (nrarfcn >= 60000 && nrarfcn <= 70000) {
+        } else if (frequency >= 880 && frequency <= 915) {
             return "n8";
-        } else if (nrarfcn >= 100000 && nrarfcn <= 120000) {
+        } else if (frequency >= 832 && frequency <= 862) {
             return "n20";
-        } else if (nrarfcn >= 120000 && nrarfcn <= 140000) {
+        } else if (frequency >= 1850 && frequency <= 1915) {
             return "n25";
-        } else if (nrarfcn >= 140000 && nrarfcn <= 160000) {
+        } else if (frequency >= 703 && frequency <= 748) {
             return "n28";
-        } else if (nrarfcn >= 240000 && nrarfcn <= 270000) {
+        } else if (frequency >= 2570 && frequency <= 2620) {
             return "n38";
-        } else if (nrarfcn >= 270000 && nrarfcn <= 290000) {
+        } else if (frequency >= 1880 && frequency <= 1920) {
             return "n39";
-        } else if (nrarfcn >= 290000 && nrarfcn <= 320000) {
+        } else if (frequency >= 2300 && frequency <= 2400) {
             return "n40";
-        } else if (nrarfcn >= 320000 && nrarfcn <= 350000) {
+        } else if (frequency >= 2496 && frequency <= 2690) {
             return "n41";
-        } else if (nrarfcn >= 350000 && nrarfcn <= 380000) {
+        } else if (frequency >= 3550 && frequency <= 3700) {
             return "n48";
-        } else if (nrarfcn >= 380000 && nrarfcn <= 410000) {
+        } else if (frequency >= 3300 && frequency <= 3400) {
             return "n50";
-        } else if (nrarfcn >= 410000 && nrarfcn <= 440000) {
+        } else if (frequency >= 3400 && frequency <= 3500) {
             return "n51";
-        } else if (nrarfcn >= 440000 && nrarfcn <= 470000) {
+        } else if (frequency >= 1710 && frequency <= 1780) {
             return "n66";
-        } else if (nrarfcn >= 470000 && nrarfcn <= 500000) {
+        } else if (frequency >= 1695 && frequency <= 1710) {
             return "n70";
-        } else if (nrarfcn >= 500000 && nrarfcn <= 530000) {
+        } else if (frequency >= 1427 && frequency <= 1470) {
             return "n74";
-        } else if (nrarfcn >= 530000 && nrarfcn <= 560000) {
+        } else if (frequency >= 3300 && frequency <= 4200) {
             return "n77";
-        } else if (nrarfcn >= 560000 && nrarfcn <= 590000) {
+        } else if (frequency >= 3300 && frequency <= 3800) {
             return "n78";
-        } else if (nrarfcn >= 590000 && nrarfcn <= 620000) {
+        } else if (frequency >= 4400 && frequency <= 5000) {
             return "n79";
         } else {
             return "Unknown";
